@@ -1,0 +1,26 @@
+name: پاک کردن فایلها
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'همه فایلهای دانلود شده پاک شه ? (تایپ کنید "yes" برای ادامه ی عملیات)'
+        required: true
+        default: 'no'
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Display warning and delete
+        run: |
+          echo "WARNING: DELETE ALL FILES inside downloads/ ?"
+          if [ "${{ github.event.inputs.confirm }}" != "yes" ]; then
+            echo "Aborted. Set confirm to 'yes' to delete."
+            exit 1
+          fi
+          rm -rf downloads/*
+          echo "All files deleted from downloads/."
